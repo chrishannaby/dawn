@@ -5,13 +5,16 @@ on:
     branches:
       - dev
 
+permissions:
+  contents: write
+
 jobs:
   merge-changes:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
@@ -19,8 +22,18 @@ jobs:
         id: commit
         run: echo "::set-output name=message::$(git log --format=%B -n 1 HEAD)"
 
-      - name: Merge changes to staging
+      - name: Get author name
+        id: author
+        run: echo "::set-output name=name::$(git log -1 --pretty=format:'%an')"
+
+      - name: Get author email
+        id: email
+        run: echo "::set-output name=email::$(git log -1 --pretty=format:'%ae')"
+
+      - name: Merge changes to target branch
         run: |
+          git config --global user.name "${{ steps.author.outputs.name }}"
+          git config --global user.email "${{ steps.email.outputs.email }}"
           git checkout staging
           git merge --no-commit --no-ff dev
           git commit -m "${{ steps.commit.outputs.message }}"
