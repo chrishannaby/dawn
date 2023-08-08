@@ -14,20 +14,19 @@ jobs:
     name: Create PR
     runs-on: ubuntu-latest
     steps:
-      - name: git checkout
+      - name: Checkout
         uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v1
         with:
-          ref: dev
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        id: cpr
+          node-version: 12
+      - name: Opening pull request
+        id: pull
+        uses: tretuna/sync-branches@1.4.0
         with:
-          commit-message: Automated Pull Request
-          title: "[Automated] Merge ${{ github.ref_name }} into staging"
-          body: Automated Pull Request
-          branch: staging
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          FROM_BRANCH: "dev"
+          TO_BRANCH: "staging"
 
       - name: Enable Pull Request Automerge
-        if: steps.cpr.outputs.pull-request-operation == 'created'
-        run: gh pr merge --merge --auto ${{ steps.cpr.outputs.pull-request-number }}
+        run: gh pr merge --merge --auto ${{ steps.pull.outputs.PULL_REQUEST_NUMBER }}
