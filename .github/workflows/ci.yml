@@ -16,17 +16,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Set up Node
-        uses: actions/setup-node@v1
-        with:
-          node-version: 12
-      - name: Opening pull request
+      
+      - name: Create PR
         id: pull
-        uses: tretuna/sync-branches@1.4.0
-        with:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-          FROM_BRANCH: "dev"
-          TO_BRANCH: "staging"
+        run: |
+          url=$(gh pr create --base staging --fill | grep -o 'http[s]://[^ ]*')
+          echo "PULL_REQUEST_URL=$url" >> "$GITHUB_OUTPUT"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Enable Pull Request Automerge
+      - name: Enable Automerge
         run: gh pr merge --merge --auto ${{ steps.pull.outputs.PULL_REQUEST_NUMBER }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
