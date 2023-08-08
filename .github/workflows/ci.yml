@@ -19,6 +19,7 @@ jobs:
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
+        id: cpr
         with:
           commit-message: Automated Pull Request
           title: "[Automated] Merge ${{ github.ref_name }} into staging"
@@ -27,4 +28,5 @@ jobs:
           add-paths: !*.json
 
       - name: Enable Pull Request Automerge
-      run: gh pr merge --merge --auto "1"
+        if: steps.cpr.outputs.pull-request-operation == 'created'
+        run: gh pr merge --merge --auto ${{ steps.cpr.outputs.pull-request-number }}
