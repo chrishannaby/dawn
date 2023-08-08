@@ -31,6 +31,6 @@ jobs:
           # Store URL, like your-store.myshopify.com
           SHOPIFY_FLAG_STORE: '${{ inputs.store }}'
           # Password generated from Theme Access app
-          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN_${{ inputs.store }} }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets.SHOPIFY_CLI_THEME_TOKEN_${{ inputs.store//-/  }} }}
           SHOPIFY_CLI_TTY: 0
         run: shopify theme push --live
