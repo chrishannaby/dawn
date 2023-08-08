@@ -1,35 +1,30 @@
-name: Merge All Changes To Staging
+name: Merge Dev Into Staging
 
 on:
   push:
     branches:
-      - dev
+      - 'dev'
 
-permissions:
+permissions: 
+  pull-requests: write
   contents: write
 
 jobs:
-  merge-changes:
+  main:
+    name: Create PR
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: git checkout
         uses: actions/checkout@v3
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
         with:
-          fetch-depth: 0
+          commit-message: Automated Pull Request
+          title: "[Automated] Merge ${{ github.ref_name }} into staging"
+          body: Automated Pull Request
+          branch: staging
+          add-paths: !*.json
 
-      - name: Get author name
-        id: author
-        run: echo "::set-output name=name::$(git log -1 --pretty=format:'%an')"
-
-      - name: Get author email
-        id: email
-        run: echo "::set-output name=email::$(git log -1 --pretty=format:'%ae')"
-
-      - name: Merge changes to target branch
-        run: |
-          git config --global user.name "${{ steps.author.outputs.name }}"
-          git config --global user.email "${{ steps.email.outputs.email }}"
-          git checkout staging
-          git merge --no-commit dev
-          git push origin staging
+      - name: Enable Pull Request Automerge
+      run: gh pr merge --merge --auto "1"
