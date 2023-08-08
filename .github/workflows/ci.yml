@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: git checkout
         uses: actions/checkout@v3
+      - name: ignore json
+        run: echo "*.json" >> .gitignore
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
@@ -25,7 +27,6 @@ jobs:
           title: "[Automated] Merge ${{ github.ref_name }} into staging"
           body: Automated Pull Request
           branch: staging
-          add-paths: !*.json
 
       - name: Enable Pull Request Automerge
         if: steps.cpr.outputs.pull-request-operation == 'created'
