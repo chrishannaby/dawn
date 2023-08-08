@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: git checkout
         uses: actions/checkout@v3
+        with:
+          ref: staging
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
