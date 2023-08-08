@@ -37,4 +37,7 @@ jobs:
           # Password generated from Theme Access app
           SHOPIFY_CLI_THEME_TOKEN: ${{ secrets[format('SHOPIFY_CLI_THEME_TOKEN_{0}', env.STORE )] }}
           SHOPIFY_CLI_TTY: 0
-        run: shopify theme push --live
+        run: |
+          echo "Deploying to $SHOPIFY_FLAG_STORE"
+          echo "Token $SHOPIFY_CLI_THEME_TOKEN"
+          shopify theme push --live
