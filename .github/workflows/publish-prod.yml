@@ -40,4 +40,4 @@ jobs:
         run: |
           echo "Deploying to $SHOPIFY_FLAG_STORE"
           echo "Token $SHOPIFY_CLI_THEME_TOKEN"
-          shopify theme push --live
+          shopify theme push -t production --allow-live
