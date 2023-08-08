@@ -1,5 +1,8 @@
 name: Theme deploy
 
+env:
+  store: ${{ github.event.inputs.store }}
+
 on:
   workflow_dispatch:
     inputs: 
@@ -26,11 +29,12 @@ jobs:
           bundler: 'latest'
       - name: Install Shopify CLI
         run: npm install -g @shopify/cli @shopify/theme
+        run: run: echo "STORE=${inputs.store//-/}" >> $GITHUB_ENV
       - name: Deploy
         env:
           # Store URL, like your-store.myshopify.com
-          SHOPIFY_FLAG_STORE: '${{ inputs.store }}'
+          SHOPIFY_FLAG_STORE: ${{ secrets[format('{0}.myshopify.com', inputs.store )] }}'
           # Password generated from Theme Access app
-          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets[format('SHOPIFY_CLI_THEME_TOKEN_{0}', inputs.store//-/ )] }}
+          SHOPIFY_CLI_THEME_TOKEN: ${{ secrets[format('SHOPIFY_CLI_THEME_TOKEN_{0}', env.STORE )] }}
           SHOPIFY_CLI_TTY: 0
         run: shopify theme push --live
