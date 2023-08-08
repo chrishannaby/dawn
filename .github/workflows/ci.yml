@@ -31,5 +31,5 @@ jobs:
           git config --global user.name "${{ steps.author.outputs.name }}"
           git config --global user.email "${{ steps.email.outputs.email }}"
           git checkout staging
-          git merge --no-commit --no-ff dev
+          git merge --no-commit dev
           git push origin staging
