@@ -20,7 +20,7 @@ jobs:
       - name: Create PR
         id: pull
         run: |
-          url=$(gh pr create --base staging --head origin/dev --fill | grep -o 'http[s]://[^ ]*')
+          url=$(gh pr create --base staging --title "Automatic PR" | grep -o 'http[s]://[^ ]*')
           echo "PULL_REQUEST_URL=$url" >> "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
